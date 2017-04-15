@@ -1,9 +1,6 @@
 package sample.Model;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 /**
  * Created by Riso on 4/15/2017.
@@ -13,7 +10,7 @@ public class ThumbnailMovie {
     private final IntegerProperty id;
     private final StringProperty name;
     private final IntegerProperty year;
-    private final IntegerProperty rating;
+    private final DoubleProperty rating;
     private final StringProperty language;
 
     /**
@@ -25,11 +22,11 @@ public class ThumbnailMovie {
      * @param rating
      * @param language
      */
-    public ThumbnailMovie(int id, String name, int year, int rating, String language) {
+    public ThumbnailMovie(int id, String name, int year, Double rating, String language) {
         this.id = new SimpleIntegerProperty(id);
         this.name = new SimpleStringProperty(name);
         this.year = new SimpleIntegerProperty(year);
-        this.rating = new SimpleIntegerProperty(rating);
+        this.rating = new SimpleDoubleProperty(rating);
         this.language = new SimpleStringProperty(language);
     }
 
@@ -69,18 +66,6 @@ public class ThumbnailMovie {
         this.year.set(year);
     }
 
-    public int getRating() {
-        return rating.get();
-    }
-
-    public IntegerProperty ratingProperty() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating.set(rating);
-    }
-
     public String getLanguage() {
         return language.get();
     }
@@ -91,5 +76,17 @@ public class ThumbnailMovie {
 
     public void setLanguage(String language) {
         this.language.set(language);
+    }
+
+    public double getRating() {
+        return rating.get();
+    }
+
+    public DoubleProperty ratingProperty() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating.set(rating);
     }
 }

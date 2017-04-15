@@ -23,5 +23,51 @@ public class PersonInMovie {
         this.position = new SimpleStringProperty(position);
     }
 
+    public String getFirstName() {
+        return firstName.get();
+    }
 
+    public StringProperty firstNameProperty() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName.set(firstName);
+    }
+
+    public String getLastName() {
+        return lastName.get();
+    }
+
+    public StringProperty lastNameProperty() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName.set(lastName);
+    }
+
+    public String getMovieName() {
+        return movieName.get();
+    }
+
+    public StringProperty movieNameProperty() {
+        return movieName;
+    }
+
+    public void setMovieName(String movieName) {
+        this.movieName.set(movieName);
+    }
+
+    public String getPosition() {
+        return position.get();
+    }
+
+    public StringProperty positionProperty() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position.set(position);
+    }
 }
