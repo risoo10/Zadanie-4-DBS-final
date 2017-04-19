@@ -1,8 +1,6 @@
-package sample.Model;
+package sample.model;
 
 import javafx.beans.property.*;
-
-import javax.xml.crypto.dom.DOMCryptoContext;
 
 /**
  * Created by Riso on 4/15/2017.

@@ -1,6 +1,4 @@
-package sample.Model;
-
-import javafx.beans.property.DoubleProperty;
+package sample.model;
 
 import java.util.List;
 
