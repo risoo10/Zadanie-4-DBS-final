@@ -21,4 +21,12 @@ public class Language {
     public String toString() {
         return name.get();
     }
+
+    public int getId() {
+        return id.get();
+    }
+
+    public IntegerProperty idProperty() {
+        return id;
+    }
 }

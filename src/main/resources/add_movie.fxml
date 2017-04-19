@@ -5,7 +5,6 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="766.0" prefWidth="1111.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.EditMovieController">
    <children>
       <Button layoutX="1016.0" layoutY="36.0" mnemonicParsing="false" onAction="#getPreviousScene" text="Späť" />
@@ -27,26 +26,34 @@
       <Label layoutX="45.0" layoutY="414.0" text="Jazyk" />
       <ComboBox fx:id="languageCombo" layoutX="45.0" layoutY="439.0" prefHeight="31.0" prefWidth="221.0" />
       <Label layoutX="45.0" layoutY="487.0" text="Popis" />
-      <TextArea fx:id="descriptionField" layoutX="45.0" layoutY="514.0" prefHeight="221.0" prefWidth="333.0" wrapText="true" />
+      <TextArea fx:id="descriptionField" layoutX="45.0" layoutY="514.0" prefHeight="221.0" prefWidth="409.0" wrapText="true" />
       <Label layoutX="499.0" layoutY="41.0" prefHeight="46.0" prefWidth="279.0" text="Personálne osadenie">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Label>
       <Button layoutX="849.0" layoutY="200.0" mnemonicParsing="false" onAction="#lookForLastName" text="Hľadaj osobu" />
-      <TableView fx:id="personsTable" layoutX="499.0" layoutY="246.0" prefHeight="230.0" prefWidth="461.0">
+      <TableView fx:id="personsTable" layoutX="499.0" layoutY="246.0" prefHeight="230.0" prefWidth="567.0">
         <columns>
           <TableColumn fx:id="firstNameCol" prefWidth="178.0" text="Meno" />
-          <TableColumn fx:id="lastNameCol" minWidth="0.0" prefWidth="187.0" text="Priezvisko" />
-            <TableColumn fx:id="ageCol" prefWidth="95.0" text="vek" />
+          <TableColumn fx:id="lastNameCol" minWidth="0.0" prefWidth="219.0" text="Priezvisko" />
+            <TableColumn fx:id="ageCol" prefWidth="115.0" text="vek" />
         </columns>
       </TableView>
-      <TextField fx:id="titleField" layoutX="45.0" layoutY="126.0" prefHeight="39.0" prefWidth="333.0" />
+      <TextField fx:id="titleField" layoutX="45.0" layoutY="126.0" prefHeight="39.0" prefWidth="409.0" />
       <Label layoutX="499.0" layoutY="487.0" text="Dvojkliknutím pridáš osobu do personálneho obsadenia vo filme." />
-      <TextField fx:id="roleField" layoutX="499.0" layoutY="122.0" prefHeight="39.0" prefWidth="333.0" />
-      <Label layoutX="499.0" layoutY="95.0" text="Meno postavy" />
+      <TextField fx:id="roleField" layoutX="739.0" layoutY="120.0" prefHeight="39.0" prefWidth="221.0" />
+      <Label layoutX="739.0" layoutY="93.0" text="Rola (nepovinné)" />
       <Label layoutX="499.0" layoutY="170.0" text="Osoba" />
       <Button layoutX="943.0" layoutY="36.0" mnemonicParsing="false" onAction="#saveMovie" text="Uložiť" />
-      <Label fx:id="personsInMovieList" alignment="TOP_LEFT" layoutX="499.0" layoutY="517.0" prefHeight="221.0" prefWidth="461.0" style="-fx-background-color: #EEF0EB;" wrapText="true" />
+      <Label fx:id="personsInMovieList" alignment="TOP_LEFT" layoutX="499.0" layoutY="547.0" prefHeight="191.0" prefWidth="567.0" style="-fx-background-color: #EEF0EB;" text="prázdny zoznam" wrapText="true" />
+      <Label layoutX="499.0" layoutY="98.0" text="Pozícia" />
+      <ComboBox fx:id="positionCombo" layoutX="499.0" layoutY="123.0" prefHeight="31.0" prefWidth="221.0" />
+      <Label fx:id="infoLabel" layoutX="499.0" layoutY="26.0" prefHeight="21.0" prefWidth="430.0" textFill="#308fc6" />
+      <Label layoutX="499.0" layoutY="522.0" prefHeight="21.0" prefWidth="279.0" text="Aktuálne obsadenie :">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

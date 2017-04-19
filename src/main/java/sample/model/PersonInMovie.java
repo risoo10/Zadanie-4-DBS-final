@@ -23,6 +23,15 @@ public class PersonInMovie {
         this.position = new SimpleStringProperty(position);
     }
 
+    public PersonInMovie( Person person,  String movieName, String position) {
+        this.id = null;
+        this.firstName = new SimpleStringProperty(person.getFirstName());
+        this.lastName = new SimpleStringProperty(person.getLastName());
+        this.movieName = new SimpleStringProperty(movieName);
+        this.position = new SimpleStringProperty(position);
+    }
+
+
     public String getFirstName() {
         return firstName.get();
     }
