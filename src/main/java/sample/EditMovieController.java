@@ -1,10 +1,13 @@
 package sample;
 
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import sample.model.Genre;
+import sample.model.Language;
 import sample.model.Person;
 import sample.model.PersonInMovie;
 
@@ -49,7 +52,7 @@ public class EditMovieController {
     private Label personsInMovieList;
 
     @FXML
-    private ComboBox<?> languageCombo;
+    private ComboBox<Language> languageCombo;
 
     @FXML
     private TextField minutesField;
@@ -58,7 +61,7 @@ public class EditMovieController {
     private TextField ratingField;
 
     @FXML
-    private ComboBox<?> genreCombo;
+    private ComboBox<Genre> genreCombo;
 
 
 
@@ -84,8 +87,8 @@ public class EditMovieController {
         DBConnector dbc = new DBConnector();
 
         String selectQuery = "SELECT f.id, f.meno, f.priezvisko, EXTRACT(YEARS FROM age(current_date, datum_narodenia)) AS vek FROM osoba f\n" +
-                "WHERE upper(f.priezvisko) LIKE '%BERNIER%'\n" +
-                "LIMIT 100;\n";
+                "WHERE upper(f.priezvisko) LIKE '%"+ upperLastName +"%'\n" +
+                ";\n";
         List<Person> persons =  dbc.select(selectQuery, new Parser() {
             @Override
             public Object parseRow(ResultSet rs) throws SQLException {
@@ -123,7 +126,61 @@ public class EditMovieController {
     }
 
     @FXML
-    void inicialize(){
+    void initialize() throws SQLException {
+
+        // Get genres and set genre COMBOBOX
+        genreCombo.setItems(getGenresDB());
+
+        // Get languages and set language COMBOBOX
+        languageCombo.setItems(getLanguagesDB());
+
+    }
+
+
+    // Get List of actually used Genres in DB
+    // Return them in the observable list
+
+    private ObservableList<Genre> getGenresDB() throws SQLException {
+        ObservableList<Genre> genresObser = FXCollections.observableArrayList();
+        String selectQuery = "SELECT id, nazov FROM zaner;\n";
+        List<Genre> genres = new DBConnector().select(selectQuery, new Parser() {
+            @Override
+            public Object parseRow(ResultSet rs) throws SQLException {
+                return new Genre(
+                        rs.getInt("id"),
+                        rs.getString("nazov")
+                );
+            }
+        });
+
+        for(Genre g : genres){
+            genresObser.add(g);
+        }
+
+        return genresObser;
+    }
+
+
+    private ObservableList<Language> getLanguagesDB() throws SQLException {
+
+        // Get languages
+        ObservableList<Language> languagesObs = FXCollections.observableArrayList();
+        String selectQuery = "SELECT id, skratka FROM krajina_povodu;\n";
+        List<Language> languages = new DBConnector().select(selectQuery, new Parser() {
+            @Override
+            public Object parseRow(ResultSet rs) throws SQLException {
+                return new Language(
+                        rs.getInt("id"),
+                        rs.getString("skratka")
+                );
+            }
+        });
+
+        for(Language g : languages){
+            languagesObs.add(g);
+        }
+
+        return languagesObs;
 
     }
 
