@@ -8,16 +8,15 @@ import javafx.beans.property.*;
 public class Screening {
 
     private final IntegerProperty id;
-    private final IntegerProperty movieId;
     private final StringProperty cinema;
-    // Screening time
+    private final StringProperty startingTime;
     private final DoubleProperty price;
     private final DoubleProperty studentPrice;
 
-    public Screening(int id, int movieId, String cinema, Double price, Double studentPrice) {
+    public Screening(int id, String cinema, String startingTime, Double price, Double studentPrice) {
         this.id = new SimpleIntegerProperty(id);
-        this.movieId = new SimpleIntegerProperty(movieId);
         this.cinema = new SimpleStringProperty(cinema);
+        this.startingTime = new SimpleStringProperty(startingTime);
         this.price = new SimpleDoubleProperty(price);
         this.studentPrice = new SimpleDoubleProperty(studentPrice);
     }
@@ -32,18 +31,6 @@ public class Screening {
 
     public void setId(int id) {
         this.id.set(id);
-    }
-
-    public int getMovieId() {
-        return movieId.get();
-    }
-
-    public IntegerProperty movieIdProperty() {
-        return movieId;
-    }
-
-    public void setMovieId(int movieId) {
-        this.movieId.set(movieId);
     }
 
     public String getCinema() {
@@ -80,5 +67,17 @@ public class Screening {
 
     public void setStudentPrice(double studentPrice) {
         this.studentPrice.set(studentPrice);
+    }
+
+    public String getStartingTime() {
+        return startingTime.get();
+    }
+
+    public StringProperty startingTimeProperty() {
+        return startingTime;
+    }
+
+    public void setStartingTime(String startingTime) {
+        this.startingTime.set(startingTime);
     }
 }

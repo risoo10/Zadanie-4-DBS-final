@@ -24,13 +24,12 @@ public class Main extends Application {
 
 
         DBConnector dbc = new DBConnector();
-        List<ThumbnailMovie> najnovsieFilmy = (List<ThumbnailMovie>)dbc.select("SELECT f.id, f.nazov, f.hodnotenie_imdb  FROM film f WHERE f.id = 200001;", new Parser() {
+        List<ThumbnailMovie> najnovsieFilmy = dbc.select("SELECT f.id, f.nazov, f.hodnotenie_imdb  FROM film f WHERE f.id = 200001;", new Parser() {
             @Override
             public Object parseRow(ResultSet rs) throws SQLException{
                 ThumbnailMovie newMovie = new ThumbnailMovie(
                         rs.getInt("id"),
                         rs.getString("nazov"),
-                        2017,
                         rs.getDouble("hodnotenie_imdb"),
                         "EN"
                         );
@@ -38,7 +37,7 @@ public class Main extends Application {
             }
         });
         for (ThumbnailMovie st : najnovsieFilmy){
-            System.out.println(st.getName() +"  ||  " + st.getRating() + " || "+ st.getYear());
+            System.out.println(st.getName() +"  ||  " + st.getRating() + " || ");
         }
 
         String screeningSelect =
@@ -70,7 +69,7 @@ public class Main extends Application {
 
 
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getClassLoader().getResource("add_movie.fxml"));
+        loader.setLocation(getClass().getClassLoader().getResource("user_pane.fxml"));
         AnchorPane root = (AnchorPane) loader.load();
         primaryStage.setTitle("Filmový portál - Domov");
         primaryStage.setScene(new Scene(root));

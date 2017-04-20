@@ -1,5 +1,8 @@
 package sample;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,10 +21,10 @@ public class DBConnector {
     private Connection con = null;
 
 
-    public List select(String selectQuery, Parser parser) throws SQLException{
+    public ObservableList select(String selectQuery, Parser parser) throws SQLException{
 
 
-        List result = new LinkedList();
+        ObservableList result = FXCollections.observableArrayList();
 
 
         try

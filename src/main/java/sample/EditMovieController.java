@@ -98,7 +98,7 @@ public class EditMovieController {
         String selectQuery = "SELECT f.id, f.meno, f.priezvisko, EXTRACT(YEARS FROM age(current_date, datum_narodenia)) AS vek FROM osoba f\n" +
                 "WHERE upper(f.priezvisko) LIKE '%"+ upperLastName +"%'\n" +
                 ";\n";
-        List<Person> persons =  dbc.select(selectQuery, new Parser() {
+        ObservableList<Person> personObserv =  dbc.select(selectQuery, new Parser() {
             @Override
             public Object parseRow(ResultSet rs) throws SQLException {
                 return new Person(
@@ -115,12 +115,6 @@ public class EditMovieController {
         firstNameCol.setCellValueFactory(celldate -> celldate.getValue().firstNameProperty());
         lastNameCol.setCellValueFactory(celldate -> celldate.getValue().lastNameProperty());
         ageCol.setCellValueFactory(cl -> cl.getValue().ageProperty().asObject());
-
-        // Insert persons found by DB into observable list
-        ObservableList<Person> personObserv = FXCollections.observableArrayList();
-        for(Person p : persons){
-            personObserv.add(p);
-        }
 
         // Display Persons in the table
         personsTable.setItems(personObserv);
@@ -214,9 +208,9 @@ public class EditMovieController {
     // Return them in the observable list
 
     private ObservableList<Genre> getGenresDB() throws SQLException {
-        ObservableList<Genre> genresObser = FXCollections.observableArrayList();
+        ObservableList<Genre> genresObser;
         String selectQuery = "SELECT id, nazov FROM zaner;\n";
-        List<Genre> genres = new DBConnector().select(selectQuery, new Parser() {
+        genresObser = new DBConnector().select(selectQuery, new Parser() {
             @Override
             public Object parseRow(ResultSet rs) throws SQLException {
                 return new Genre(
@@ -226,10 +220,6 @@ public class EditMovieController {
             }
         });
 
-        for(Genre g : genres){
-            genresObser.add(g);
-        }
-
         return genresObser;
     }
 
@@ -237,9 +227,9 @@ public class EditMovieController {
     private ObservableList<Language> getLanguagesDB() throws SQLException {
 
         // Get languages
-        ObservableList<Language> languagesObs = FXCollections.observableArrayList();
+        ObservableList<Language> languagesObs;
         String selectQuery = "SELECT id, skratka FROM krajina_povodu;\n";
-        List<Language> languages = new DBConnector().select(selectQuery, new Parser() {
+        languagesObs = new DBConnector().select(selectQuery, new Parser() {
             @Override
             public Object parseRow(ResultSet rs) throws SQLException {
                 return new Language(
@@ -249,10 +239,6 @@ public class EditMovieController {
             }
         });
 
-        for(Language g : languages){
-            languagesObs.add(g);
-        }
-
         return languagesObs;
 
     }
@@ -261,9 +247,9 @@ public class EditMovieController {
     // Return them in the observable list
 
     private ObservableList<Position> getPositionsDB() throws SQLException {
-        ObservableList<Position> observableList = FXCollections.observableArrayList();
+        ObservableList<Position> observableList;
         String selectQuery = "SELECT id, nazov FROM obsadenie;\n";
-        List<Position> values = new DBConnector().select(selectQuery, new Parser() {
+        observableList = new DBConnector().select(selectQuery, new Parser() {
             @Override
             public Object parseRow(ResultSet rs) throws SQLException {
                 return new Position(
@@ -272,10 +258,6 @@ public class EditMovieController {
                 );
             }
         });
-
-        for(Position g : values){
-            observableList.add(g);
-        }
 
         return observableList;
     }

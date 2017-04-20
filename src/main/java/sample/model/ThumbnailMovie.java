@@ -9,7 +9,6 @@ public class ThumbnailMovie {
 
     private final IntegerProperty id;
     private final StringProperty name;
-    private final IntegerProperty year;
     private final DoubleProperty rating;
     private final StringProperty language;
 
@@ -18,14 +17,12 @@ public class ThumbnailMovie {
      *
      * @param id
      * @param name
-     * @param year
      * @param rating
      * @param language
      */
-    public ThumbnailMovie(int id, String name, int year, Double rating, String language) {
+    public ThumbnailMovie(int id, String name, Double rating, String language) {
         this.id = new SimpleIntegerProperty(id);
         this.name = new SimpleStringProperty(name);
-        this.year = new SimpleIntegerProperty(year);
         this.rating = new SimpleDoubleProperty(rating);
         this.language = new SimpleStringProperty(language);
     }
@@ -52,18 +49,6 @@ public class ThumbnailMovie {
 
     public void setName(String name) {
         this.name.set(name);
-    }
-
-    public int getYear() {
-        return year.get();
-    }
-
-    public IntegerProperty yearProperty() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year.set(year);
     }
 
     public String getLanguage() {
