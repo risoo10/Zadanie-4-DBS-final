@@ -35,6 +35,9 @@ public class UserController {
     private Label movieTitle;
 
     @FXML
+    private Label moviePremiere;
+
+    @FXML
     private Label movieGenre;
 
     @FXML
@@ -191,7 +194,7 @@ public class UserController {
 
         // Load simple info about movie.
         // Select string
-        String selectQuery = "SELECT f.id, f.nazov, hodnotenie_imdb, dlzka_min, rok_vydania, popis, k.skratka AS jazyk, z.nazov AS zaner FROM film f\n" +
+        String selectQuery = "SELECT f.id, f.nazov, hodnotenie_imdb, dlzka_min, rok_vydania, popis, k.skratka AS jazyk, z.nazov AS zaner, premiera FROM film f\n" +
                 "JOIN krajina_povodu k ON k.id = f.krajina_povodu_id\n" +
                 "JOIN zaner z ON z.id = f.zaner_id\n" +
                 "WHERE f.id = "+ movie_id + ";";
@@ -208,7 +211,8 @@ public class UserController {
                         rs.getString("jazyk"),
                         rs.getInt("rok_vydania"),
                         rs.getDouble("hodnotenie_imdb"),
-                        rs.getString("popis")
+                        rs.getString("popis"),
+                        rs.getDate("premiera")
                 );
             }
         }).get(0);
@@ -221,6 +225,7 @@ public class UserController {
         movieRating.setText("" + movie.getRating());
         movieYear.setText("" + movie.getYear());
         movieDesciption.setText("" + movie.getDescription());
+        moviePremiere.setText(movie.getPremiera().toString());
 
 
         // Load persons acting in / creating the movie.
@@ -272,6 +277,11 @@ public class UserController {
 
     @FXML
     void showFavouriteLists(ActionEvent event) {
+
+    }
+
+    @FXML
+    void showAdminPane(ActionEvent event) {
 
     }
 

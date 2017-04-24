@@ -55,5 +55,7 @@
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
+      <DatePicker fx:id="premieraDatePicker" layoutX="185.0" layoutY="279.0" prefHeight="39.0" prefWidth="218.0" />
+      <Label layoutX="185.0" layoutY="258.0" text="Premiéra" />
    </children>
 </AnchorPane>

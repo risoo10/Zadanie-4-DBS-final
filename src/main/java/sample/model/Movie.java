@@ -1,5 +1,6 @@
 package sample.model;
 
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -15,6 +16,7 @@ public class Movie {
     private int year;
     private Double rating;
     private String description;
+    private Date premiera;
 
     private List<PersonInMovie> cast;
     private List<Screening> screenings;
@@ -31,7 +33,7 @@ public class Movie {
      * @param description
      */
 
-    public Movie(int id, String name, String genre, int minutes, String language, int year, Double rating, String description) {
+    public Movie(int id, String name, String genre, int minutes, String language, int year, Double rating, String description, Date premiera) {
         this.id = id;
         this.name = name;
         this.genre = genre;
@@ -40,6 +42,7 @@ public class Movie {
         this.year = year;
         this.rating = rating;
         this.description = description;
+        this.premiera = premiera;
     }
 
     public int getId() {
@@ -72,5 +75,9 @@ public class Movie {
 
     public String getDescription() {
         return description;
+    }
+
+    public Date getPremiera() {
+        return premiera;
     }
 }

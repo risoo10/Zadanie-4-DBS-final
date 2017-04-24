@@ -10,6 +10,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import sample.model.*;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -68,13 +70,13 @@ public class EditMovieController {
     @FXML
     private Label infoLabel;
 
+    @FXML
+    private DatePicker premieraDatePicker;
 
 
     private boolean insertOperation;
 
-    private ObservableList<PersonInMovie> personsInMovies  = FXCollections.observableArrayList();
-
-
+    private ObservableList<PersonInMovie> personsInMovies = FXCollections.observableArrayList();
 
 
     @FXML
@@ -96,9 +98,9 @@ public class EditMovieController {
         DBConnector dbc = new DBConnector();
 
         String selectQuery = "SELECT f.id, f.meno, f.priezvisko, EXTRACT(YEARS FROM age(current_date, datum_narodenia)) AS vek FROM osoba f\n" +
-                "WHERE upper(f.priezvisko) LIKE '%"+ upperLastName +"%'\n" +
+                "WHERE upper(f.priezvisko) LIKE '%" + upperLastName + "%'\n" +
                 ";\n";
-        ObservableList<Person> personObserv =  dbc.select(selectQuery, new Parser() {
+        ObservableList<Person> personObserv = dbc.select(selectQuery, new Parser() {
             @Override
             public Object parseRow(ResultSet rs) throws SQLException {
                 return new Person(
@@ -120,7 +122,7 @@ public class EditMovieController {
         personsTable.setItems(personObserv);
 
         // Inform User if Person doesnt exist.
-        if(personObserv.size() > 0) {
+        if (personObserv.size() > 0) {
         } else {
             infoLabel.setText("Nenasli sa ziadne postavy s hladanim priezviskom.");
         }
@@ -130,11 +132,10 @@ public class EditMovieController {
     // Pomocou transakcie uloz novy film do databazy.
     // Vyuzijeme transkaciu pomocou ktorej zapiseme vsetky udaje do databazy.
     @FXML
-    void saveMovie(ActionEvent event) {
+    void saveMovie(ActionEvent event) throws SQLException {
 
 
         // Load informations about movie from input fields
-
         String title = titleField.getText();
         Double rating = Double.parseDouble(ratingField.getText());
         int minutes = Integer.parseInt(minutesField.getText());
@@ -142,15 +143,32 @@ public class EditMovieController {
         String description = descriptionField.getText();
         int language_id = languageCombo.getValue().getId();
         int genre_id = genreCombo.getValue().getId();
+        Date premiera = java.sql.Date.valueOf(premieraDatePicker.getValue());
 
+        String insertStatement = "INSERT INTO film(nazov, hodnotenie_imdb, dlzka_min, rok_vydania, popis, krajina_povodu_id, zaner_id, premiera) VALUES (?,?,?,?,?,?,?,?);";
+        new DBConnector().insert(insertStatement, new Inserter() {
 
+            @Override
+            public void insertRows(PreparedStatement pstm) throws SQLException{
+
+                pstm.setString(1, title);
+                pstm.setDouble(2, rating);
+                pstm.setInt(3, minutes);
+                pstm.setInt(4, year);
+                pstm.setString(5, description);
+                pstm.setInt(6, language_id);
+                pstm.setInt(7, genre_id);
+                pstm.setDate(8, premiera);
+
+                pstm.execute();
+            }
+        });
 
 
     }
 
     @FXML
     void initialize() throws SQLException {
-
 
 
         // Get genres and set genre COMBOBOX
@@ -167,10 +185,10 @@ public class EditMovieController {
 
 
         // Listen to double click on the table row and launch actions
-        personsTable.setRowFactory(tv ->{
+        personsTable.setRowFactory(tv -> {
             TableRow<Person> row = new TableRow<>();
-            row.setOnMouseClicked(event ->{
-                if(event.getClickCount() == 2 && ( ! row.isEmpty())){
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     addNewPersonInMovie(row.getItem(), roleField.getText(), positionCombo.getValue());
                 }
             });
@@ -181,10 +199,9 @@ public class EditMovieController {
     }
 
 
-
     // Pridaj Osobu do personalneho obsadenia.
 
-    private void addNewPersonInMovie(Person person, String role, Position position){
+    private void addNewPersonInMovie(Person person, String role, Position position) {
 
         // Create new Person In Movie
         PersonInMovie newPersonInMovie = new PersonInMovie(person, role, position.toString());
@@ -194,14 +211,12 @@ public class EditMovieController {
 
         // Display actual list of Persons in movie
         personsInMovieList.setText("");
-        for(PersonInMovie pim : personsInMovies){
+        for (PersonInMovie pim : personsInMovies) {
             personsInMovieList.setText(personsInMovieList.getText() +
-             pim.getFirstName() + " " + pim.getLastName() + "  (" + pim.getPosition() + ")\n");
+                    pim.getFirstName() + " " + pim.getLastName() + "  (" + pim.getPosition() + ")\n");
         }
 
     }
-
-
 
 
     // Get List of actually used Genres in DB
