@@ -4,11 +4,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import sample.model.*;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -89,6 +94,9 @@ public class UserController {
     private TableColumn<PersonInMovie, String> PIM_positionCol;
     @FXML
     private TableColumn<PersonInMovie, String> PIM_firstNameCol;
+
+
+    private Stage primaryStage;
 
 
     private int limit = 100;
@@ -282,6 +290,20 @@ public class UserController {
 
     @FXML
     void showAdminPane(ActionEvent event) {
+        try {
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getClassLoader().getResource("admin_pane.fxml"));
+            AnchorPane root = null;
+            root = (AnchorPane) loader.load();
+            AdminController ac = loader.getController();
+            ac.setPrimaryStage(primaryStage);
+            primaryStage.setTitle("Filmový portál - Administrácia");
+            primaryStage.setScene(new Scene(root));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -298,5 +320,9 @@ public class UserController {
         }
         initNewestMovieTable();
 
+    }
+
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
     }
 }

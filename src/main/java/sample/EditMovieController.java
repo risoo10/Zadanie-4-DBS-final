@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import sample.model.*;
 
 import java.sql.Date;
@@ -77,6 +78,8 @@ public class EditMovieController {
     private boolean insertOperation;
 
     private ObservableList<PersonInMovie> personsInMovies = FXCollections.observableArrayList();
+
+    private Stage primaryStage;
 
 
     @FXML
@@ -277,5 +280,7 @@ public class EditMovieController {
         return observableList;
     }
 
-
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+    }
 }

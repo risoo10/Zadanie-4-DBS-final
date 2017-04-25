@@ -71,16 +71,11 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("user_pane.fxml"));
         AnchorPane root = (AnchorPane) loader.load();
+        UserController uc = loader.getController();
+        uc.setPrimaryStage(primaryStage);
         primaryStage.setTitle("Filmový portál - Domov");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
-
-
-
-        // NOVY ZAZNAM
-
-
-
 
 
 
