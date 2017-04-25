@@ -10,7 +10,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="845.0" prefWidth="1238.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.UserController">
+<AnchorPane prefHeight="850.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.UserController">
    <children>
       <HBox alignment="CENTER" layoutX="822.0" layoutY="11.0" spacing="10.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="15.0">
          <children>
@@ -28,43 +28,46 @@
             <Label fx:id="usernameLabel" layoutX="1007.0" layoutY="20.0" text="Meno Priezvisko" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="20.0" />
          </children>
       </HBox>
-      <ScrollPane layoutX="14.0" layoutY="14.0" prefHeight="804.0" prefViewportHeight="1267.0" prefViewportWidth="559.0" prefWidth="582.0" style="-fx-border-color: #FFFFFF;" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+      <ScrollPane layoutX="14.0" layoutY="14.0" prefHeight="791.0" prefViewportHeight="1267.0" prefViewportWidth="559.0" prefWidth="582.0" style="-fx-border-color: #FFFFFF;" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
          <content>
             <AnchorPane prefHeight="1296.0" prefWidth="561.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #FFFFFF;">
                <children>
-                  <Button layoutX="163.0" layoutY="715.0" mnemonicParsing="false" onAction="#showNextMovies" text="Ďalšie &gt;" />
-                  <Label layoutX="16.0" text="Najnovšie filmy">
+                  <Button layoutX="163.0" layoutY="725.0" mnemonicParsing="false" onAction="#showNextMovies" text="Ďalšie &gt;" />
+                  <Label layoutX="16.0" layoutY="4.0" text="Najnovšie filmy">
                      <font>
                         <Font name="System Bold" size="20.0" />
                      </font>
                   </Label>
-                  <TableView fx:id="newestMoviesTable" layoutX="16.0" layoutY="36.0" prefHeight="669.0" prefWidth="511.0">
+                  <TableView fx:id="newestMoviesTable" layoutX="16.0" layoutY="46.0" prefHeight="669.0" prefWidth="511.0">
                     <columns>
                       <TableColumn fx:id="MOV_titleCol" prefWidth="305.0" text="Názov" />
                       <TableColumn fx:id="MOV_languageCol" minWidth="0.0" prefWidth="89.0" text="Jazyk" />
                         <TableColumn fx:id="MOV_ratingCol" prefWidth="117.0" text="Hodnotenie" />
                     </columns>
                   </TableView>
-                  <AnchorPane layoutY="779.0" prefHeight="488.0" prefWidth="559.0" style="-fx-background-color: #75a1cd;">
+                  <AnchorPane layoutY="779.0" prefHeight="663.0" prefWidth="559.0" style="-fx-background-color: #75a1cd;">
                      <children>
-                        <TableView fx:id="topCreatorsTable" layoutX="61.0" layoutY="71.0" prefHeight="391.0" prefWidth="438.0">
+                        <TableView fx:id="topCreatorsTable" layoutX="61.0" layoutY="108.0" prefHeight="532.0" prefWidth="438.0">
                           <columns>
                             <TableColumn fx:id="TC_firstNameCol" prefWidth="136.0" text="Meno" />
                             <TableColumn fx:id="TC_lastNameCol" prefWidth="170.0" text="Priezvisko" />
                               <TableColumn fx:id="TC_movieCountCol" prefWidth="131.0" text="Počet filmov" />
                           </columns>
                         </TableView>
-                        <Label layoutX="63.0" layoutY="27.0" text="Top 15 najúspešnejších tvorcov za rok 2016">
+                        <Label layoutX="61.0" layoutY="23.0" text="Top 15 najúspešnejších tvorcov za zvolený rok">
                            <font>
                               <Font name="System Bold" size="20.0" />
                            </font>
                         </Label>
+                        <TextField fx:id="creatorsYearField" layoutX="61.0" layoutY="60.0" prefHeight="31.0" prefWidth="126.0" promptText="zadaj rok" />
+                        <Button layoutX="197.0" layoutY="60.0" mnemonicParsing="false" onAction="#showTopCreatorsForYear" text="zobraz výsledky" />
                      </children>
                      <padding>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </AnchorPane>
-                  <Button layoutX="16.0" layoutY="715.0" mnemonicParsing="false" onAction="#showPreviousMovies" text="&lt; Predchádzajúce" />
+                  <Button layoutX="16.0" layoutY="725.0" mnemonicParsing="false" onAction="#showPreviousMovies" text="&lt; Predchádzajúce" />
+                  <Button layoutX="457.0" layoutY="5.0" mnemonicParsing="false" onAction="#refreshScene" text="Refresh" />
                </children>
                <padding>
                   <Insets top="30.0" />
@@ -72,7 +75,7 @@
             </AnchorPane>
          </content>
       </ScrollPane>
-      <ScrollPane layoutX="622.0" layoutY="84.0" prefHeight="733.0" prefViewportHeight="1236.0" prefViewportWidth="541.0" prefWidth="582.0" scaleShape="false" style="-fx-border-color: #ffffff;" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="60.0">
+      <ScrollPane layoutX="633.0" layoutY="77.0" prefHeight="733.0" prefViewportHeight="1236.0" prefViewportWidth="541.0" prefWidth="582.0" scaleShape="false" style="-fx-border-color: #ffffff;" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="77.0">
          <content>
             <AnchorPane prefHeight="1236.0" prefWidth="556.0" style="-fx-background-color: #ffffff; -fx-border-color: #ffffff;">
                <children>

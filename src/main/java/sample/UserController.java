@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import sample.model.*;
@@ -50,6 +51,9 @@ public class UserController {
 
     @FXML
     private Label usernameLabel;
+
+    @FXML
+    private TextField creatorsYearField;
 
 
     @FXML
@@ -96,7 +100,9 @@ public class UserController {
     private TableColumn<PersonInMovie, String> PIM_firstNameCol;
 
 
+    // UI elements
     private Stage primaryStage;
+    private Scene scene;
 
 
     private int limit = 100;
@@ -129,6 +135,8 @@ public class UserController {
                         showMovieDetail(newValue.getId());
                     } catch (SQLException e) {
                         e.printStackTrace();
+                    } catch (NullPointerException n){
+
                     }
                 }
         );
@@ -145,6 +153,12 @@ public class UserController {
         SCR_fullPriceCol.setCellValueFactory(c->c.getValue().priceProperty().asObject());
         SCR_studentsPriceCol.setCellValueFactory(c->c.getValue().studentPriceProperty().asObject());
 
+    }
+
+    @FXML
+    public void showTopCreatorsForYear(ActionEvent event) throws SQLException{
+        int year = Integer.parseInt(creatorsYearField.getText());
+        initTopCreatorsTable(year);
     }
 
     private void initNewestMovieTable() throws SQLException {
@@ -173,16 +187,13 @@ public class UserController {
 
     }
 
-    private void initTopCreatorsTable() throws SQLException {
-
-        String selectQuery = "SELECT o.meno, o.priezvisko, count(ovf.film_id) AS pocet FROM osoba_vofilme ovf\n" +
+    private void initTopCreatorsTable(int year) throws SQLException {
+        String selectQuery = "SELECT o.meno, o.priezvisko, count(ovf.film_id)AS pocet FROM osoba_vofilme ovf\n" +
+                "JOIN (SELECT id FROM film f WHERE EXTRACT(YEAR FROM f.premiera) = "+year+" ) tmp ON tmp.id = ovf.film_id\n" +
                 "JOIN osoba o ON o.id = ovf.osoba_id\n" +
-                "JOIN film f ON f.id = ovf.film_id\n" +
-                "WHERE EXTRACT(YEAR FROM f.premiera) = 2016\n" +
                 "GROUP BY o.id\n" +
                 "ORDER BY count(DISTINCT ovf.film_id) DESC, priezvisko ASC \n" +
-                "LIMIT 11;\n";
-
+                "LIMIT 15;";
         ObservableList<TopCreator> topCreators = new DBConnector().select(selectQuery, new Parser() {
             @Override
             public Object parseRow(ResultSet rs) throws SQLException {
@@ -298,8 +309,11 @@ public class UserController {
             root = (AnchorPane) loader.load();
             AdminController ac = loader.getController();
             ac.setPrimaryStage(primaryStage);
+            Scene scene = new Scene(root);
+            ac.setScene(scene);
+            ac.setPreviousScene(this.scene);
             primaryStage.setTitle("Filmový portál - Administrácia");
-            primaryStage.setScene(new Scene(root));
+            primaryStage.setScene(scene);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -310,6 +324,7 @@ public class UserController {
     @FXML
     void showNextMovies(ActionEvent event) throws SQLException {
         page++;
+
         initNewestMovieTable();
     }
 
@@ -317,12 +332,24 @@ public class UserController {
     void showPreviousMovies(ActionEvent event) throws SQLException {
         if(page > 0){
             page--;
-        }
-        initNewestMovieTable();
 
+            initNewestMovieTable();
+        }
+
+
+
+    }
+
+    @FXML
+    void refreshScene(ActionEvent event) throws SQLException {
+        initialize();
     }
 
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
     }
 }

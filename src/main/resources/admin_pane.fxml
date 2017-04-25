@@ -15,12 +15,11 @@
             <Button layoutX="173.0" layoutY="750.0" mnemonicParsing="false" onAction="#showNextMoviesNewest" text="Ďalšie &gt;" />
          </children>
       </HBox>
-      <TableView fx:id="newestMoviesTable" layoutX="26.0" layoutY="61.0" prefHeight="679.0" prefWidth="511.0" AnchorPane.leftAnchor="26.0">
+      <TableView fx:id="newestMoviesTable" layoutX="26.0" layoutY="84.0" prefHeight="656.0" prefWidth="528.0" AnchorPane.leftAnchor="26.0">
          <columns>
-            <TableColumn fx:id="MOV_titleCol" prefWidth="273.0" text="Názov" />
-            <TableColumn fx:id="MOV_languageCol" minWidth="0.0" prefWidth="77.0" text="Jazyk" />
-            <TableColumn fx:id="MOV_ratingCol" prefWidth="110.0" text="Hodnotenie" />
-            <TableColumn fx:id="MOV_editCol" prefWidth="48.0" />
+            <TableColumn fx:id="MOV_titleCol" prefWidth="309.0" text="Názov" />
+            <TableColumn fx:id="MOV_languageCol" minWidth="0.0" prefWidth="90.0" text="Jazyk" />
+            <TableColumn fx:id="MOV_ratingCol" prefWidth="127.0" text="Hodnotenie" />
          </columns>
       </TableView>
       <Label layoutX="25.0" layoutY="22.0" text="Administrácia - Najnovšie filmy" AnchorPane.leftAnchor="26.0">
@@ -33,13 +32,11 @@
             <Button layoutY="575.0" mnemonicParsing="false" onAction="#showPreviousMoviesSearch" text="&lt; Predchádzajúce" />
             <TableView fx:id="searchMovieTable" layoutY="83.0" prefHeight="487.0" prefWidth="559.0">
                <columns>
-                  <TableColumn fx:id="SEARCH_titleCol" prefWidth="273.0" text="Názov" />
-                  <TableColumn fx:id="SEARCH_languageCol" minWidth="0.0" prefWidth="77.0" text="Jazyk" />
-                  <TableColumn fx:id="SEARCH_ratingCol" prefWidth="110.0" text="Hodnotenie" />
-                  <TableColumn fx:id="SEARCH_editCol" prefWidth="48.0" />
+                  <TableColumn fx:id="SEARCH_titleCol" prefWidth="308.0" text="Názov" />
+                  <TableColumn fx:id="SEARCH_languageCol" minWidth="0.0" prefWidth="115.0" text="Jazyk" />
+                  <TableColumn fx:id="SEARCH_ratingCol" prefWidth="134.0" text="Hodnotenie" />
                </columns>
             </TableView>
-            <Label text="Vyhľadávanie filmov" />
             <Button layoutX="147.0" layoutY="575.0" mnemonicParsing="false" onAction="#showNextMoviesSearch" text="Ďalšie &gt;" />
             <Button layoutX="364.0" layoutY="33.0" mnemonicParsing="false" onAction="#searchMovieByTitle" prefHeight="31.0" prefWidth="147.0" text="Hľadaj film" />
             <TextField fx:id="movieTitleSearchField" layoutY="28.0" prefHeight="40.0" prefWidth="348.0" promptText="zadaj názov filmu" />
@@ -51,5 +48,13 @@
          </font>
       </Button>
       <Button layoutX="1068.0" layoutY="46.0" mnemonicParsing="false" onAction="#getPreviousScene" text="Späť" AnchorPane.rightAnchor="30.0" />
+      <Label layoutX="26.0" layoutY="53.0" text="Dvojkliknutím na riadok v tabuľkách sa spustí okno pre úpravu záznamu o filme." />
+      <Label layoutX="608.0" layoutY="62.0" text="Vyhľadávanie filmov">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="608.0" layoutY="92.0" text="Dvojkliknutím na riadok sa spustí okno pre úpravu záznamu o filme." />
+      <Button layoutX="484.0" layoutY="750.0" mnemonicParsing="false" onAction="#refreshMovieTable" text="Refresh" />
    </children>
 </AnchorPane>

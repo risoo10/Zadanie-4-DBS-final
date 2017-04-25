@@ -6,11 +6,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import sample.model.*;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -79,12 +83,15 @@ public class EditMovieController {
 
     private ObservableList<PersonInMovie> personsInMovies = FXCollections.observableArrayList();
 
+
     private Stage primaryStage;
+    private Scene previousScene;
+
 
 
     @FXML
     void getPreviousScene(ActionEvent event) {
-
+        primaryStage.setScene(previousScene);
     }
 
     @FXML
@@ -282,5 +289,9 @@ public class EditMovieController {
 
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
+    }
+
+    public void setPreviousScene(Scene previousScene) {
+        this.previousScene = previousScene;
     }
 }

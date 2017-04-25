@@ -74,7 +74,9 @@ public class Main extends Application {
         UserController uc = loader.getController();
         uc.setPrimaryStage(primaryStage);
         primaryStage.setTitle("Filmový portál - Domov");
-        primaryStage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        uc.setScene(scene);
+        primaryStage.setScene(scene);
         primaryStage.show();
 
 
