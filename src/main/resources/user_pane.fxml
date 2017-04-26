@@ -28,9 +28,9 @@
             <Label fx:id="usernameLabel" layoutX="1007.0" layoutY="20.0" text="Meno Priezvisko" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="20.0" />
          </children>
       </HBox>
-      <ScrollPane layoutX="14.0" layoutY="14.0" prefHeight="791.0" prefViewportHeight="1267.0" prefViewportWidth="559.0" prefWidth="582.0" style="-fx-border-color: #FFFFFF;" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+      <ScrollPane layoutX="14.0" layoutY="14.0" prefHeight="791.0" prefViewportHeight="1267.0" prefViewportWidth="559.0" prefWidth="582.0" style="-fx-border-color: #f4f4f4;" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
          <content>
-            <AnchorPane prefHeight="1296.0" prefWidth="561.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #FFFFFF;">
+            <AnchorPane prefHeight="1296.0" prefWidth="561.0" style="-fx-background-color: #f4f4f4; -fx-border-color: #f4f4f4;">
                <children>
                   <Button layoutX="163.0" layoutY="725.0" mnemonicParsing="false" onAction="#showNextMovies" text="Ďalšie &gt;" />
                   <Label layoutX="16.0" layoutY="4.0" text="Najnovšie filmy">
@@ -75,11 +75,11 @@
             </AnchorPane>
          </content>
       </ScrollPane>
-      <ScrollPane layoutX="633.0" layoutY="77.0" prefHeight="733.0" prefViewportHeight="1236.0" prefViewportWidth="541.0" prefWidth="582.0" scaleShape="false" style="-fx-border-color: #ffffff;" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="77.0">
+      <ScrollPane layoutX="633.0" layoutY="77.0" prefHeight="733.0" prefViewportHeight="1236.0" prefViewportWidth="541.0" prefWidth="582.0" scaleShape="false" style="-fx-border-color: #f4f4f4;" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="77.0">
          <content>
-            <AnchorPane prefHeight="1236.0" prefWidth="556.0" style="-fx-background-color: #ffffff; -fx-border-color: #ffffff;">
+            <AnchorPane prefHeight="1236.0" prefWidth="556.0" style="-fx-background-color: #f4f4f4; -fx-border-color: #f4f4f4;">
                <children>
-                  <AnchorPane style="-fx-background-color: #FFFFFF;">
+                  <AnchorPane style="-fx-background-color: #f4f4f4;">
                      <children>
                         <Label layoutX="447.0" layoutY="157.0" text="hodnotenie" textAlignment="CENTER" />
                         <Label fx:id="movieRating" alignment="CENTER" contentDisplay="CENTER" layoutX="436.0" layoutY="103.0" prefHeight="61.0" prefWidth="97.0" text="9,8">

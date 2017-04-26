@@ -5,15 +5,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import sample.model.ThumbnailMovie;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -66,6 +62,7 @@ public class AdminController {
     private String searchTitle;
 
 
+    // Initialize values before scene is shown
     @FXML
     void initialize() throws SQLException {
 
@@ -79,8 +76,48 @@ public class AdminController {
         SEARCH_languageCol.setCellValueFactory(c->c.getValue().languageProperty());
         SEARCH_ratingCol.setCellValueFactory(c->c.getValue().ratingProperty().asObject());
         SEARCH_titleCol.setCellValueFactory(c->c.getValue().nameProperty());
+
+        // Listen to double click on the table row and launch Editing Scene
+        setDoubleClickAction(newestMoviesTable);
+        setDoubleClickAction(searchMovieTable);
+
+
     }
 
+    // Set the action which happens after user double click on the row in the table.
+    private void setDoubleClickAction(TableView table){
+
+        // Listen to double click on the table row and launch Editing Scene
+        table.setRowFactory(tv -> {
+            TableRow<ThumbnailMovie> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    try {
+
+                        FXMLLoader loader = new FXMLLoader();
+                        loader.setLocation(getClass().getClassLoader().getResource("edit_movie.fxml"));
+                        AnchorPane root = null;
+                        root = (AnchorPane) loader.load();
+                        EditMovieController emc = loader.getController();
+                        emc.setPrimaryStage(primaryStage);
+                        emc.setPreviousScene(this.scene);
+                        emc.initValues(row.getItem().getId());
+                        primaryStage.setTitle("Filmový portál - Uprav film");
+                        primaryStage.setScene(new Scene(root));
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            return row;
+        });
+
+    }
+
+    //
     private void initNewestMovieTable() throws SQLException {
 
         // Get data from DB as actual page
@@ -159,7 +196,7 @@ public class AdminController {
     private void showMoviesByTitle() throws SQLException {
         String upperTitle = searchTitle.toUpperCase();
 
-        String selectQuery = "SELECT f.nazov, f.hodnotenie_imdb, (SELECT k.skratka FROM krajina_povodu k WHERE f.krajina_povodu_id = k.id) AS jazyk  FROM film f\n" +
+        String selectQuery = "SELECT f.id, f.nazov, f.hodnotenie_imdb, (SELECT k.skratka FROM krajina_povodu k WHERE f.krajina_povodu_id = k.id) AS jazyk  FROM film f\n" +
                 "WHERE upper(f.nazov) LIKE '"+upperTitle+"%'\n" +
                 "LIMIT "+searchLimit+" OFFSET "+searchPage*searchLimit+";\n";
 
@@ -167,7 +204,7 @@ public class AdminController {
             @Override
             public Object parseRow(ResultSet rs) throws SQLException {
                 return new ThumbnailMovie(
-                        0,
+                        rs.getInt("id"),
                         rs.getString("nazov"),
                         rs.getDouble("hodnotenie_imdb"),
                         rs.getString("jazyk")
@@ -190,7 +227,7 @@ public class AdminController {
             loader.setLocation(getClass().getClassLoader().getResource("add_movie.fxml"));
             AnchorPane root = null;
             root = (AnchorPane) loader.load();
-            EditMovieController emc = loader.getController();
+            NewMovieController emc = loader.getController();
             emc.setPrimaryStage(primaryStage);
             emc.setPreviousScene(this.scene);
             primaryStage.setTitle("Filmový portál - Pridaj nový film");
