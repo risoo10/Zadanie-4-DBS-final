@@ -44,7 +44,7 @@ premietanie v kine a ďalšie.
 
 6. Ako admin, chcem pridať novy záznam o filme spolu s hereckým obsadením.
 
-Počas týchto scenárov sa  
+Počas týchto scenárov sa  použije.
 
 
 
