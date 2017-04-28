@@ -113,14 +113,13 @@ public class EditMovieController extends NewMovieController{
         // Init table of persons in the movie
         // Load persons acting in / creating the movie.
         String select =
-                "SELECT ovf.id, o.meno, o.priezvisko, ob.nazov, ovf.meno_postavy FROM osoba_vofilme ovf \n" +
+                "SELECT ovf.id, o.meno, osoba_id, obsadenie_id, o.priezvisko, ob.nazov, ovf.meno_postavy FROM osoba_vofilme ovf \n" +
                         "JOIN osoba o ON o.id = ovf.osoba_id \n" +
                         "JOIN obsadenie ob ON ob.id = ovf.obsadenie_id \n" +
                         "WHERE ovf.film_id ="+movieId+";\n";
         ObservableList<PersonInMovie> persons = new DBConnector().select(select, new PersonInMovieParser());
 
-
-
+        personsInMovieTable.setItems(persons);
 
 
     }
