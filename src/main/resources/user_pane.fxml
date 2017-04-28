@@ -14,12 +14,7 @@
    <children>
       <HBox alignment="CENTER" layoutX="822.0" layoutY="11.0" spacing="10.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="15.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#showAdminPane" text="administrácia" />
-            <Button layoutX="822.0" layoutY="15.0" mnemonicParsing="false" onAction="#showFavouriteLists" text="Zoznamy obľúbených filmov">
-               <HBox.margin>
-                  <Insets right="20.0" />
-               </HBox.margin>
-            </Button>
+            <Button mnemonicParsing="false" onAction="#showAdminPane" text="Administrácia" />
             <ImageView fitHeight="39.0" fitWidth="45.0" layoutX="954.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@user.png" />

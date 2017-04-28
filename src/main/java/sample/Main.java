@@ -5,6 +5,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import sample.dbmanagment.DBConnector;
+import sample.dbmanagment.Parser;
+import sample.dbmanagment.PersonInMovieParser;
 import sample.model.PersonInMovie;
 import sample.model.ThumbnailMovie;
 
@@ -46,22 +49,7 @@ public class Main extends Application {
                 "JOIN obsadenie ob ON ob.id = ovf.obsadenie_id \n" +
                 "WHERE ovf.film_id =";
 
-        List<PersonInMovie> premietania = (List<PersonInMovie>)dbc.select(screeningSelect + najnovsieFilmy.get(0).getId() + ";", new Parser() {
-            @Override
-            public Object parseRow(ResultSet rs) throws SQLException {
-                PersonInMovie pim = new PersonInMovie(
-                        rs.getInt("id"),
-                        rs.getString("meno"),
-                        rs.getString("priezvisko"),
-                        najnovsieFilmy.get(0).getName(),
-                        rs.getString("nazov")
-                );
-
-                return pim;
-            }
-
-
-        });
+        List<PersonInMovie> premietania = (List<PersonInMovie>)dbc.select(screeningSelect + najnovsieFilmy.get(0).getId() + ";", new PersonInMovieParser());
 
         for(PersonInMovie pim : premietania){
             System.out.println(pim.getFirstName() + "  "+pim.getLastName() + " : " + pim.getPosition() + "("+pim.getMovieName()+")");

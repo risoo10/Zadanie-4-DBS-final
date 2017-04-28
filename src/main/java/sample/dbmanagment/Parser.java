@@ -1,4 +1,4 @@
-package sample;
+package sample.dbmanagment;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

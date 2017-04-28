@@ -1,26 +1,19 @@
 package sample;
 
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import sample.dbmanagment.DBConnector;
+import sample.dbmanagment.Parser;
 import sample.model.*;
 
-import java.io.IOException;
 import java.sql.Date;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by Riso on 4/19/2017.
@@ -55,9 +48,6 @@ public class NewMovieController {
     protected TableColumn<Person, String> lastNameCol;
 
     @FXML
-    protected Label personsInMovieList;
-
-    @FXML
     protected ComboBox<Language> languageCombo;
 
     @FXML
@@ -78,9 +68,19 @@ public class NewMovieController {
     @FXML
     protected DatePicker premieraDatePicker;
 
+    @FXML
+    protected TableView<PersonInMovie> personsInMovieTable;
+    @FXML
+    protected TableColumn<PersonInMovie,String> PIM_firstNameCol;
+    @FXML
+    protected TableColumn<PersonInMovie,String> PIM_lastNameCol;
+    @FXML
+    protected TableColumn<PersonInMovie,String> PIM_positionCol;
 
 
-    protected ObservableList<PersonInMovie> personsInMovies = FXCollections.observableArrayList();
+
+
+    private ObservableList<PersonInMovie> personsInMovies = FXCollections.observableArrayList();
 
 
     protected Stage primaryStage;
@@ -122,20 +122,16 @@ public class NewMovieController {
         });
 
 
-        // Pair the columns of the table to the actual values of Person
-        firstNameCol.setCellValueFactory(celldate -> celldate.getValue().firstNameProperty());
-        lastNameCol.setCellValueFactory(celldate -> celldate.getValue().lastNameProperty());
-        ageCol.setCellValueFactory(cl -> cl.getValue().ageProperty().asObject());
-
         // Display Persons in the table
         personsTable.setItems(personObserv);
 
         // Inform User if Person doesnt exist.
         if (personObserv.size() > 0) {
         } else {
-            infoLabel.setText("Nenasli sa ziadne postavy s hladanim priezviskom.");
+            infoLabel.setText("Nenasli sa ziadne postavy s hladanym priezviskom.");
         }
     }
+
 
 
     // Inset data into database
@@ -150,51 +146,19 @@ public class NewMovieController {
         int minutes = Integer.parseInt(minutesField.getText());
         int year = Integer.parseInt(yearField.getText());
         String description = descriptionField.getText();
+        String language = languageCombo.getValue().toString();
         int language_id = languageCombo.getValue().getId();
+        String genre = genreCombo.getValue().getName();
         int genre_id = genreCombo.getValue().getId();
-        Date premiera = java.sql.Date.valueOf(premieraDatePicker.getValue());
+        Date premiere = java.sql.Date.valueOf(premieraDatePicker.getValue());
 
 
-        // Insert movie in the film table
-        String insertStatement = "INSERT INTO film(nazov, hodnotenie_imdb, dlzka_min, rok_vydania, popis, krajina_povodu_id, zaner_id, premiera) VALUES (?,?,?,?,?,?,?,?);";
-        new DBConnector().insert(insertStatement, new Inserter() {
+        Movie movie = new Movie(0, title, genre, minutes, language, year, rating, description, premiere, language_id, genre_id);
 
-            @Override
-            public void insertRows(PreparedStatement pstm) throws SQLException{
+        // Run transaction where you insert movie and every person to DB
+        new DBConnector().insertTransaction(movie, personsInMovies);
 
-                pstm.setString(1, title);
-                pstm.setDouble(2, rating);
-                pstm.setInt(3, minutes);
-                pstm.setInt(4, year);
-                pstm.setString(5, description);
-                pstm.setInt(6, language_id);
-                pstm.setInt(7, genre_id);
-                pstm.setDate(8, premiera);
-
-                pstm.execute();
-            }
-        });
-
-
-        // For every person involved (in the $personsInMovie list)
-        // insert into osoba_vofilme table.
-
-//        String insertString = "INSERT INTO osoba_vofilme(nazov, hodnotenie_imdb, dlzka_min, rok_vydania, popis, krajina_povodu_id, zaner_id, premiera) VALUES (?,?,?,?,?,?,?,?);";
-//
-//        new DBConnector().insert(insertString, new Inserter() {
-//            @Override
-//            public void insertRows(PreparedStatement pstm) throws SQLException {
-//                for(PersonInMovie pim : personsInMovies){
-//                    pstm
-//                }
-//            }
-//        });
-
-
-
-
-
-
+        getPreviousScene(null);
     }
 
     @FXML
@@ -225,6 +189,15 @@ public class NewMovieController {
             return row;
         });
 
+        // Pair the columns of the table to the actual values of Person
+        firstNameCol.setCellValueFactory(celldate -> celldate.getValue().firstNameProperty());
+        lastNameCol.setCellValueFactory(celldate -> celldate.getValue().lastNameProperty());
+        ageCol.setCellValueFactory(cl -> cl.getValue().ageProperty().asObject());
+
+        // Pair the columns of the table for People involved in movie
+        PIM_firstNameCol.setCellValueFactory(celldate -> celldate.getValue().firstNameProperty());
+        PIM_lastNameCol.setCellValueFactory(celldate -> celldate.getValue().lastNameProperty());
+        PIM_positionCol.setCellValueFactory(celldate -> celldate.getValue().positionProperty());
 
     }
 
@@ -234,17 +207,13 @@ public class NewMovieController {
     protected void addNewPersonInMovie(Person person, String role, Position position) {
 
         // Create new Person In Movie
-        PersonInMovie newPersonInMovie = new PersonInMovie(person, role, position.toString());
+        PersonInMovie newPersonInMovie = new PersonInMovie(person, role, position.toString(), person.getId(), position.getId() );
 
         // Add to oservable list
         personsInMovies.add(newPersonInMovie);
 
         // Display actual list of Persons in movie
-        personsInMovieList.setText("");
-        for (PersonInMovie pim : personsInMovies) {
-            personsInMovieList.setText(personsInMovieList.getText() +
-                    pim.getFirstName() + " " + pim.getLastName() + "  (" + pim.getPosition() + ")\n");
-        }
+        personsInMovieTable.setItems(personsInMovies);
 
     }
 
@@ -266,6 +235,13 @@ public class NewMovieController {
         });
 
         return genresObser;
+    }
+
+    @FXML
+    void deleteSelectedPersonInMovie(){
+        int deletedIndex = personsInMovieTable.getSelectionModel().getSelectedIndex();
+        personsInMovies.remove(deletedIndex);
+        personsInMovieTable.setItems(personsInMovies);
     }
 
 

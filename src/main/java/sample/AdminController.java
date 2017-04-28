@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import sample.dbmanagment.DBConnector;
+import sample.dbmanagment.Parser;
 import sample.model.ThumbnailMovie;
 
 import java.io.IOException;

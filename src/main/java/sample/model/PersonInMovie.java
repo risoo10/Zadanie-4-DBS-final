@@ -12,23 +12,29 @@ public class PersonInMovie {
     private final IntegerProperty id;
     private final StringProperty firstName;
     private final StringProperty lastName;
+    private int person_id;
     private final StringProperty movieName;
     private final StringProperty position;
+    private int position_id;
 
-    public PersonInMovie(int id, String firstName, String lastName, String movieName, String position) {
+    public PersonInMovie(int id, String firstName, String lastName, String movieName, String position, int person_id, int position_id) {
         this.id = new SimpleIntegerProperty(id);
         this.firstName = new SimpleStringProperty(firstName);
         this.lastName = new SimpleStringProperty(lastName);
         this.movieName = new SimpleStringProperty(movieName);
         this.position = new SimpleStringProperty(position);
+        this.position_id = position_id;
+        this.person_id = person_id;
     }
 
-    public PersonInMovie( Person person,  String movieName, String position) {
+    public PersonInMovie( Person person,  String movieName, String position, int person_id, int position_id) {
         this.id = null;
         this.firstName = new SimpleStringProperty(person.getFirstName());
         this.lastName = new SimpleStringProperty(person.getLastName());
         this.movieName = new SimpleStringProperty(movieName);
         this.position = new SimpleStringProperty(position);
+        this.position_id = position_id;
+        this.person_id = person_id;
     }
 
 
@@ -78,5 +84,13 @@ public class PersonInMovie {
 
     public void setPosition(String position) {
         this.position.set(position);
+    }
+
+    public int getPerson_id() {
+        return person_id;
+    }
+
+    public int getPosition_id() {
+        return position_id;
     }
 }

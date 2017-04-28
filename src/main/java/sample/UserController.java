@@ -12,12 +12,15 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import sample.dbmanagment.DBConnector;
+import sample.dbmanagment.MovieParser;
+import sample.dbmanagment.Parser;
+import sample.dbmanagment.PersonInMovieParser;
 import sample.model.*;
 
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * Created by Riso on 4/15/2017.
@@ -188,12 +191,13 @@ public class UserController {
     }
 
     private void initTopCreatorsTable(int year) throws SQLException {
-        String selectQuery = "SELECT o.meno, o.priezvisko, count(ovf.film_id)AS pocet FROM osoba_vofilme ovf\n" +
+        String selectQuery = "SELECT o.meno, o.priezvisko, count(ovf.film_id) AS pocet FROM osoba_vofilme ovf\n" +
                 "JOIN (SELECT id FROM film f WHERE EXTRACT(YEAR FROM f.premiera) = "+year+" ) tmp ON tmp.id = ovf.film_id\n" +
                 "JOIN osoba o ON o.id = ovf.osoba_id\n" +
                 "GROUP BY o.id\n" +
                 "ORDER BY count(DISTINCT ovf.film_id) DESC, priezvisko ASC \n" +
                 "LIMIT 15;";
+        long start = System.currentTimeMillis();
         ObservableList<TopCreator> topCreators = new DBConnector().select(selectQuery, new Parser() {
             @Override
             public Object parseRow(ResultSet rs) throws SQLException {
@@ -201,6 +205,7 @@ public class UserController {
             }
         });
 
+        System.out.println(System.currentTimeMillis() - start);
         topCreatorsTable.setItems(topCreators);
 
     }
@@ -213,28 +218,13 @@ public class UserController {
 
         // Load simple info about movie.
         // Select string
-        String selectQuery = "SELECT f.id, f.nazov, hodnotenie_imdb, dlzka_min, rok_vydania, popis, k.skratka AS jazyk, z.nazov AS zaner, premiera FROM film f\n" +
+        String selectQuery = "SELECT f.id, krajina_povodu_id, zaner_id, f.nazov, hodnotenie_imdb, dlzka_min, rok_vydania, popis, k.skratka AS jazyk, z.nazov AS zaner, premiera FROM film f\n" +
                 "JOIN krajina_povodu k ON k.id = f.krajina_povodu_id\n" +
                 "JOIN zaner z ON z.id = f.zaner_id\n" +
                 "WHERE f.id = "+ movie_id + ";";
 
         // Recieve data from database
-        movie = (Movie) new DBConnector().select(selectQuery, new Parser() {
-            @Override
-            public Object parseRow(ResultSet rs) throws SQLException {
-                return new Movie(
-                        rs.getInt("id"),
-                        rs.getString("nazov"),
-                        rs.getString("zaner"),
-                        rs.getInt("dlzka_min"),
-                        rs.getString("jazyk"),
-                        rs.getInt("rok_vydania"),
-                        rs.getDouble("hodnotenie_imdb"),
-                        rs.getString("popis"),
-                        rs.getDate("premiera")
-                );
-            }
-        }).get(0);
+        movie = (Movie) new DBConnector().select(selectQuery, new MovieParser()).get(0);
 
         // Display informations.
         movieTitle.setText(movie.getName());
@@ -249,23 +239,11 @@ public class UserController {
 
         // Load persons acting in / creating the movie.
         String select =
-                "SELECT ovf.id, o.meno, o.priezvisko, ob.nazov, ovf.meno_postavy FROM osoba_vofilme ovf \n" +
+                "SELECT ovf.id, o.meno, ovf.osoba_id, ovf.obsadenie_id,  o.priezvisko, ob.nazov, ovf.meno_postavy FROM osoba_vofilme ovf \n" +
                 "JOIN osoba o ON o.id = ovf.osoba_id \n" +
                 "JOIN obsadenie ob ON ob.id = ovf.obsadenie_id \n" +
                 "WHERE ovf.film_id ="+movie_id+";\n";
-        ObservableList<PersonInMovie> persons = new DBConnector().select(select, new Parser() {
-            @Override
-            public Object parseRow(ResultSet rs) throws SQLException {
-                return new PersonInMovie(
-                        rs.getInt("id"),
-                        rs.getString("meno"),
-                        rs.getString("priezvisko"),
-                        rs.getString("nazov"),
-                        rs.getString("meno_postavy")
-                );
-            }
-        });
-
+        ObservableList<PersonInMovie> persons = new DBConnector().select(select, new PersonInMovieParser());
         personsInMovieTable.setItems(persons);
 
 
@@ -293,11 +271,6 @@ public class UserController {
         screeningsTable.setItems(screeningsMovie);
     }
 
-
-    @FXML
-    void showFavouriteLists(ActionEvent event) {
-
-    }
 
     @FXML
     void showAdminPane(ActionEvent event) {
