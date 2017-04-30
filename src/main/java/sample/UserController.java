@@ -121,6 +121,7 @@ public class UserController {
         // Get data for newest movie table
         initNewestMovieTable();
 
+
         // Display info in the table.
         PIM_firstNameCol.setCellValueFactory(c->c.getValue().firstNameProperty());
         PIM_lastNameCol.setCellValueFactory(c->c.getValue().lastNameProperty());
@@ -144,7 +145,7 @@ public class UserController {
         // Set properties of columns in table for Top Creators
         TC_firstNameCol.setCellValueFactory(c->c.getValue().firstNameProperty());
         TC_lastNameCol.setCellValueFactory(c->c.getValue().lastNameProperty());
-        TC_movieCountCol.setCellValueFactory(c->c.getValue().filmCountProperty().asObject());
+        TC_movieCountCol.setCellValueFactory(c->c.getValue().movieCountProperty().asObject());
 
         // Set properties of columns in table for Screenings
         SCR_startCol.setCellValueFactory(c->c.getValue().startingTimeProperty());
@@ -190,6 +191,9 @@ public class UserController {
         // Display data in the table
         newestMoviesTable.setItems(moviesObs);
 
+        // Display detailed info about first item in the table
+        newestMoviesTable.getSelectionModel().select(0);
+        showMovieDetail(newestMoviesTable.getSelectionModel().getSelectedItem().getId());
     }
 
 
