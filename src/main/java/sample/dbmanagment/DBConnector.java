@@ -2,9 +2,13 @@ package sample.dbmanagment;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.postgresql.ds.PGPoolingDataSource;
+import org.postgresql.ds.PGSimpleDataSource;
+import org.postgresql.jdbc3.Jdbc3PoolingDataSource;
 import sample.model.Movie;
 import sample.model.PersonInMovie;
 
+import javax.sql.DataSource;
 import java.sql.*;
 
 /**
@@ -12,32 +16,47 @@ import java.sql.*;
  */
 public class DBConnector {
 
-    private final static String url = "jdbc:postgresql:filmovy_portal";
-    private final static String user = "film_admin";
-    private final static String passwd = "123456";
+    // Data source which manage getting connection
+    private PGSimpleDataSource source = new PGSimpleDataSource();
 
-
+    //
     private Statement stmt = null;
     private PreparedStatement pstmt = null;
     private Connection con = null;
 
+    // Initialize values important for establishing connection
+    public DBConnector() {
+        source.setServerName("localhost");
+        source.setDatabaseName("filmovy_portal");
+        source.setUser("film_admin");
+        source.setPassword("123456");
+    }
 
+    // General method for selecting data from DB
+    // **************
+    // Select query will be executed and the Parser will process the result set
+    // Parser will be passed as object with implemented method parseRow()
+    // Requested data will be returned as a observable list of objects
     public ObservableList select(String selectQuery, Parser parser) throws SQLException {
 
-
+        // Get empty observable list
         ObservableList result = FXCollections.observableArrayList();
 
-
+        //
         try {
-            con = DriverManager.getConnection(url, user, passwd);
-            // use connection
+            // Get Connection
+            con = source.getConnection();
+            // Create statement
             stmt = con.createStatement();
+            // Execute Statement with selected query
             ResultSet rs = stmt.executeQuery(selectQuery);
 
+            // Process every row with Parser object
             while (rs.next()) {
                 result.add(parser.parseRow(rs));
             }
 
+            // Return list of objects
             return result;
 
         } catch (SQLException e) {
@@ -56,13 +75,14 @@ public class DBConnector {
         return null;
     }
 
-
-    // Transaction for inserting movie with list of persons involved in making the movie
+    // Specific transaction
+    // Transaction for inserting movie with list of persons involved in making the movie.
+    // Movie collects basic info about movie
     public void insertTransaction(Movie movie, ObservableList<PersonInMovie> persons) throws SQLException {
         try {
-
-            con = DriverManager.getConnection(url, user, passwd);
-            // Stop autocommit
+            // Get Connection
+            con = source.getConnection();
+            // Stop autocommit to gain atomic structure of trabsaction
             con.setAutoCommit(false);
 
             // Insert movie
@@ -91,7 +111,7 @@ public class DBConnector {
                 pstmt.execute();
             }
 
-            // Commit changes
+            // Commit changes and close atomic structure
             con.commit();
 
         } catch (SQLException e) {
@@ -106,42 +126,16 @@ public class DBConnector {
                 }
             }
         }
-
-
     }
 
 
-    public void insert(String insertStatement, Inserter inserter) throws SQLException {
-        try {
-            con = DriverManager.getConnection(url, user, passwd);
-            // use connection
-
-            pstmt = con.prepareStatement(insertStatement);
-
-            inserter.insertRows(pstmt);
-
-        } catch (SQLException e) {
-            // log error
-            e.printStackTrace();
-        } finally {
-            pstmt.close();
-            if (con != null) {
-                try {
-                    con.close();
-                } catch (SQLException e) {
-                }
-            }
-        }
-    }
-
-
+    // General method to execute SQL statements
     public void execute(String exetutedStatement) throws SQLException {
         try {
-            con = DriverManager.getConnection(url, user, passwd);
-            // use connection
 
+            // Get connection and execute statement
+            con = source.getConnection();
             pstmt = con.prepareStatement(exetutedStatement);
-
             pstmt.execute();
 
         } catch (SQLException e) {

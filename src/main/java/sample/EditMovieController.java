@@ -16,30 +16,27 @@ import java.sql.SQLException;
  */
 public class EditMovieController extends NewMovieController{
 
-
-
-
-
     // Movie reference
     private Movie movie;
 
 
+    // Use to delete every trace of edited movie from DB
     @FXML
     void deleteMovie() throws SQLException {
 
         // Run delete statement in DB for movie and all other mentions
-        // will delete on cascade by freign key constraint.
+        // will delete on cascade by freign key constraints.
         String deleteStatement = "DELETE FROM film WHERE id="+movie.getId()+";";
 
-        new DBConnector().execute(deleteStatement);
+        dbConnector.execute(deleteStatement);
 
         getPreviousScene(null);
     }
 
-    // Initialize Combo boxes and set tables from super class
-
+    // Is called after the Scene is constructed
+    // Initialize controls in the Scene.
     @FXML
-    void initialize() throws SQLException {
+    void init() throws SQLException {
 
         // Get genres and set genre COMBOBOX
         genreCombo.setItems(getGenresDB());
@@ -79,13 +76,13 @@ public class EditMovieController extends NewMovieController{
                 "premiera='" + premiera.toString() +"' "+
                 "WHERE id="+movie.getId()+";";
 
-        new DBConnector().execute(update);
+        dbConnector.execute(update);
 
         // Go to previous scene
         getPreviousScene(null);
     }
 
-    // Init view with values from movie
+    // Initialize fields with actual information about selected movie
     public void initValues(int movieId) throws SQLException {
 
         // Load movie from dbmanagment and create movie object
@@ -96,7 +93,7 @@ public class EditMovieController extends NewMovieController{
                 "WHERE f.id = "+ movieId + ";";
 
         // Recieve data from database
-        movie = (Movie) new DBConnector().select(selectQuery, new MovieParser()).get(0);
+        movie = (Movie) dbConnector.select(selectQuery, new MovieParser()).get(0);
 
         // Display data to the fields for user to edit
         titleField.setText(movie.getName());
@@ -106,9 +103,9 @@ public class EditMovieController extends NewMovieController{
         descriptionField.setText(movie.getDescription());
         genreCombo.getSelectionModel().select(movie.getGenre_id());
         languageCombo.getSelectionModel().select(movie.getLanguage_id());
+
         // Set date
         premieraDatePicker.setValue(movie.getPremiera().toLocalDate());
-
 
         // Init table of persons in the movie
         // Load persons acting in / creating the movie.
@@ -117,10 +114,9 @@ public class EditMovieController extends NewMovieController{
                         "JOIN osoba o ON o.id = ovf.osoba_id \n" +
                         "JOIN obsadenie ob ON ob.id = ovf.obsadenie_id \n" +
                         "WHERE ovf.film_id ="+movieId+";\n";
-        ObservableList<PersonInMovie> persons = new DBConnector().select(select, new PersonInMovieParser());
-
+        ObservableList<PersonInMovie> persons = dbConnector.select(select, new PersonInMovieParser());
+        // Show list in the table
         personsInMovieTable.setItems(persons);
-
 
     }
 

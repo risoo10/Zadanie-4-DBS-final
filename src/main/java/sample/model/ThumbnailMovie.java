@@ -3,7 +3,9 @@ package sample.model;
 import javafx.beans.property.*;
 
 /**
- * Created by Riso on 4/15/2017.
+ * Doesnt map the enitity in the Entity Model
+ * Is used to hold partial info about Movie (film entity)
+ *
  */
 public class ThumbnailMovie {
 
@@ -12,14 +14,6 @@ public class ThumbnailMovie {
     private final DoubleProperty rating;
     private final StringProperty language;
 
-    /**
-     *
-     *
-     * @param id
-     * @param name
-     * @param rating
-     * @param language
-     */
     public ThumbnailMovie(int id, String name, Double rating, String language) {
         this.id = new SimpleIntegerProperty(id);
         this.name = new SimpleStringProperty(name);

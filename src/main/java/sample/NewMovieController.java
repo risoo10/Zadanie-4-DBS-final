@@ -20,54 +20,49 @@ import java.sql.SQLException;
  */
 public class NewMovieController {
 
-    @FXML
-    protected TextField personLastNameField;
 
-    @FXML
-    protected TableColumn<Person, Integer> ageCol;
-
+    // Input controls for user to insert information
+    // Fields for basic information abou movie
     @FXML
     protected TextField yearField;
-
     @FXML
     protected TextField titleField;
-
-    @FXML
-    protected TextField roleField;
-
     @FXML
     protected TextArea descriptionField;
+    @FXML
+    protected TextField minutesField;
+    @FXML
+    protected TextField ratingField;
+    @FXML
+    protected ComboBox<Genre> genreCombo;
+    @FXML
+    protected ComboBox<Language> languageCombo;
+    @FXML
+    protected DatePicker premieraDatePicker;
 
+
+    // Controls for searching persons
+    @FXML
+    protected TextField personLastNameField;
+    @FXML
+    protected TextField roleField;
+    @FXML
+    protected ComboBox<Position> positionCombo;
+
+    // Table to show results of the search
     @FXML
     protected TableView<Person> personsTable;
-
+    @FXML
+    protected TableColumn<Person, Integer> ageCol;
     @FXML
     protected TableColumn<Person, String> firstNameCol;
-
     @FXML
     protected TableColumn<Person, String> lastNameCol;
 
     @FXML
-    protected ComboBox<Language> languageCombo;
-
-    @FXML
-    protected TextField minutesField;
-
-    @FXML
-    protected TextField ratingField;
-
-    @FXML
-    protected ComboBox<Genre> genreCombo;
-
-    @FXML
-    protected ComboBox<Position> positionCombo;
-
-    @FXML
     protected Label infoLabel;
 
-    @FXML
-    protected DatePicker premieraDatePicker;
-
+    // Table to the display movie creator actualy attached to the movie
     @FXML
     protected TableView<PersonInMovie> personsInMovieTable;
     @FXML
@@ -78,92 +73,23 @@ public class NewMovieController {
     protected TableColumn<PersonInMovie,String> PIM_positionCol;
 
 
-
-
+    // List of persons involved with movie making
+    // Dynamically added to the list
     private ObservableList<PersonInMovie> personsInMovies = FXCollections.observableArrayList();
 
 
+    // UI elements
     protected Stage primaryStage;
     protected Scene previousScene;
 
+    // DB Connection
+    protected DBConnector dbConnector;
 
 
+    // Initialize combo boxes and controls in the view.
+    // Is called after the construction of the Scene
     @FXML
-    void getPreviousScene(ActionEvent event) {
-        primaryStage.setScene(previousScene);
-    }
-
-    @FXML
-    void lookForLastName(ActionEvent event) throws SQLException {
-
-        // Reset info label to empty string.
-        infoLabel.setText("");
-
-
-        String lastName = personLastNameField.getText();
-        // DB is searching in uppercase if user input lowercase last name
-        String upperLastName = lastName.toUpperCase();
-
-        DBConnector dbc = new DBConnector();
-
-        String selectQuery = "SELECT f.id, f.meno, f.priezvisko, EXTRACT(YEARS FROM age(current_date, datum_narodenia)) AS vek FROM osoba f\n" +
-                "WHERE upper(f.priezvisko) LIKE '" + upperLastName + "%'\n" +
-                ";\n";
-        ObservableList<Person> personObserv = dbc.select(selectQuery, new Parser() {
-            @Override
-            public Object parseRow(ResultSet rs) throws SQLException {
-                return new Person(
-                        rs.getInt("id"),
-                        rs.getString("meno"),
-                        rs.getString("priezvisko"),
-                        rs.getInt("vek")
-                );
-            }
-        });
-
-
-        // Display Persons in the table
-        personsTable.setItems(personObserv);
-
-        // Inform User if Person doesnt exist.
-        if (personObserv.size() > 0) {
-        } else {
-            infoLabel.setText("Nenasli sa ziadne postavy s hladanym priezviskom.");
-        }
-    }
-
-
-
-    // Inset data into database
-    // First Insert new movie in to correct table and then every person involved to the table
-    @FXML
-    void saveMovie(ActionEvent event) throws SQLException {
-
-
-        // Load informations about movie from input fields
-        String title = titleField.getText();
-        Double rating = Double.parseDouble(ratingField.getText());
-        int minutes = Integer.parseInt(minutesField.getText());
-        int year = Integer.parseInt(yearField.getText());
-        String description = descriptionField.getText();
-        String language = languageCombo.getValue().toString();
-        int language_id = languageCombo.getValue().getId();
-        String genre = genreCombo.getValue().getName();
-        int genre_id = genreCombo.getValue().getId();
-        Date premiere = java.sql.Date.valueOf(premieraDatePicker.getValue());
-
-
-        Movie movie = new Movie(0, title, genre, minutes, language, year, rating, description, premiere, language_id, genre_id);
-
-        // Run transaction where you insert movie and every person to DB
-        new DBConnector().insertTransaction(movie, personsInMovies);
-
-        getPreviousScene(null);
-    }
-
-    @FXML
-    void initialize() throws SQLException {
-
+    void init() throws SQLException {
 
         // Get genres and set genre COMBOBOX
         genreCombo.setItems(getGenresDB());
@@ -201,9 +127,84 @@ public class NewMovieController {
 
     }
 
+    // Load previous scene as it was left without change
+    @FXML
+    void getPreviousScene(ActionEvent event) {
+        primaryStage.setScene(previousScene);
+    }
 
-    // Pridaj Osobu do personalneho obsadenia.
+    // Look in the DB for people with Last name as user inserted
+    @FXML
+    void lookForLastName(ActionEvent event) throws SQLException {
 
+        // Reset info label to empty string.
+        infoLabel.setText("");
+
+        // Input Last name
+        // Convert to upper case to ignore lower or upper case input by user
+        String lastName = personLastNameField.getText();
+        // DB is searching in uppercase if user input lowercase last name
+        String upperLastName = lastName.toUpperCase();
+
+
+
+        String selectQuery = "SELECT f.id, f.meno, f.priezvisko, EXTRACT(YEARS FROM age(current_date, datum_narodenia)) AS vek FROM osoba f\n" +
+                "WHERE upper(f.priezvisko) LIKE '" + upperLastName + "%'\n" +
+                ";\n";
+        ObservableList<Person> personObserv = dbConnector.select(selectQuery, new Parser() {
+            @Override
+            public Object parseRow(ResultSet rs) throws SQLException {
+                return new Person(
+                        rs.getInt("id"),
+                        rs.getString("meno"),
+                        rs.getString("priezvisko"),
+                        rs.getInt("vek")
+                );
+            }
+        });
+
+        // Display result (Persons) in the table
+        personsTable.setItems(personObserv);
+
+        // Inform User if Person doesn't exist.
+        if (personObserv.size() > 0) {
+        } else {
+            infoLabel.setText("Nenasli sa ziadne postavy s hladanym priezviskom.");
+        }
+    }
+
+
+
+    // Insert data into database
+    // Run transaction to insert info about movie and about list of persons in movie
+    @FXML
+    void saveMovie(ActionEvent event) throws SQLException {
+
+
+        // Load informations about movie from input fields
+        String title = titleField.getText();
+        Double rating = Double.parseDouble(ratingField.getText());
+        int minutes = Integer.parseInt(minutesField.getText());
+        int year = Integer.parseInt(yearField.getText());
+        String description = descriptionField.getText();
+        String language = languageCombo.getValue().toString();
+        int language_id = languageCombo.getValue().getId();
+        String genre = genreCombo.getValue().getName();
+        int genre_id = genreCombo.getValue().getId();
+        Date premiere = java.sql.Date.valueOf(premieraDatePicker.getValue());
+
+        // Create movie with data from user input
+        Movie movie = new Movie(0, title, genre, minutes, language, year, rating, description, premiere, language_id, genre_id);
+
+        // Run transaction where you insert movie and every person to DB
+        dbConnector.insertTransaction(movie, personsInMovies);
+
+        // Go to previous scene
+        getPreviousScene(null);
+    }
+
+
+    // Dynamically create and add Person to list of Persons in the movies.
     protected void addNewPersonInMovie(Person person, String role, Position position) {
 
         // Create new Person In Movie
@@ -214,17 +215,15 @@ public class NewMovieController {
 
         // Display actual list of Persons in movie
         personsInMovieTable.setItems(personsInMovies);
-
     }
 
 
-    // Get List of actually used Genres in DB
+    // Get List of actually used Genres from DB
     // Return them in the observable list
-
     protected ObservableList<Genre> getGenresDB() throws SQLException {
         ObservableList<Genre> genresObser;
         String selectQuery = "SELECT id, nazov FROM zaner;\n";
-        genresObser = new DBConnector().select(selectQuery, new Parser() {
+        genresObser = dbConnector.select(selectQuery, new Parser() {
             @Override
             public Object parseRow(ResultSet rs) throws SQLException {
                 return new Genre(
@@ -237,6 +236,8 @@ public class NewMovieController {
         return genresObser;
     }
 
+
+    // Dynamically remove Person from List of movies before the data is send to the DB
     @FXML
     void deleteSelectedPersonInMovie(){
         int deletedIndex = personsInMovieTable.getSelectionModel().getSelectedIndex();
@@ -244,13 +245,14 @@ public class NewMovieController {
         personsInMovieTable.setItems(personsInMovies);
     }
 
-
+    // Get List of actually used Languages from DB
+    // Return them in the observable list
     protected ObservableList<Language> getLanguagesDB() throws SQLException {
 
         // Get languages
         ObservableList<Language> languagesObs;
         String selectQuery = "SELECT id, skratka FROM krajina_povodu;\n";
-        languagesObs = new DBConnector().select(selectQuery, new Parser() {
+        languagesObs = dbConnector.select(selectQuery, new Parser() {
             @Override
             public Object parseRow(ResultSet rs) throws SQLException {
                 return new Language(
@@ -266,11 +268,10 @@ public class NewMovieController {
 
     // Get List of actually used work positions in DB
     // Return them in the observable list
-
     protected ObservableList<Position> getPositionsDB() throws SQLException {
         ObservableList<Position> observableList;
         String selectQuery = "SELECT id, nazov FROM obsadenie;\n";
-        observableList = new DBConnector().select(selectQuery, new Parser() {
+        observableList = dbConnector.select(selectQuery, new Parser() {
             @Override
             public Object parseRow(ResultSet rs) throws SQLException {
                 return new Position(
@@ -289,5 +290,9 @@ public class NewMovieController {
 
     public void setPreviousScene(Scene previousScene) {
         this.previousScene = previousScene;
+    }
+
+    public void setDbConnector(DBConnector dbConnector) {
+        this.dbConnector = dbConnector;
     }
 }

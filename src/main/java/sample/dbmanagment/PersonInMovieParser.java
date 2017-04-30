@@ -6,7 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Created by Riso on 4/28/2017.
+ * Parse row when selecting Person In Movie from DB.
+ * Has multiple usage, so we don't need to implement the Anonymous class with parseRow() method too many times.
  */
 public class PersonInMovieParser implements Parser {
 

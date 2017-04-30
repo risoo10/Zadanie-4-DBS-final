@@ -5,10 +5,11 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-/**
- * Created by Riso on 4/19/2017.
- */
+// Language entity to hold info about Language during runtime
+// Maps krajina_povodu entity from Entity Model
 public class Language {
+
+    // Attributes
     private final IntegerProperty id;
     private final StringProperty name;
 

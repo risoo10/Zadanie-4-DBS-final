@@ -3,10 +3,12 @@ package sample.model;
 import javafx.beans.property.*;
 
 /**
- * Created by Riso on 4/15/2017.
+ * Entity premietanie from Entity Model
+ * Holds info about Screening during runtime.
  */
 public class Screening {
 
+    // Attributes
     private final IntegerProperty id;
     private final StringProperty cinema;
     private final StringProperty startingTime;

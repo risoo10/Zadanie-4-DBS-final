@@ -6,9 +6,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- * Created by Riso on 4/15/2017.
+ * Entity osoba_vofilme from Enity Model
+ * Holds info about Person In Movie during runtime
  */
 public class PersonInMovie {
+
+    // Attributes
     private final IntegerProperty id;
     private final StringProperty firstName;
     private final StringProperty lastName;

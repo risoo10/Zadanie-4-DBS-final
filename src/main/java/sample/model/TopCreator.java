@@ -5,24 +5,26 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- * Created by Riso on 4/19/2017.
+ * Doesn't map entity from Entity Model
+ * Holds info about Person and sum of movies where the Person been involved.
  */
 public class TopCreator {
 
-    private final IntegerProperty filmCount;
+    // Attributes
+    private final IntegerProperty movieCount;
     private final Person person;
 
-    public TopCreator(int filmCount, Person person) {
-        this.filmCount = new SimpleIntegerProperty(filmCount);
+    public TopCreator(int movieCount, Person person) {
+        this.movieCount = new SimpleIntegerProperty(movieCount);
         this.person = person;
     }
 
-    public int getFilmCount() {
-        return filmCount.get();
+    public int getmovieCount() {
+        return movieCount.get();
     }
 
-    public IntegerProperty filmCountProperty() {
-        return filmCount;
+    public IntegerProperty movieCountProperty() {
+        return movieCount;
     }
 
     public StringProperty firstNameProperty() {

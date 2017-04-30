@@ -5,10 +5,12 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-/**
- * Created by Riso on 4/19/2017.
- */
+// Genre entity to hold info about Genre during runtime
+// Maps zaner entity from Entity Model
+
 public class Genre {
+
+    // Atributes
     private final IntegerProperty id;
     private final StringProperty name;
 
@@ -40,6 +42,7 @@ public class Genre {
     public void setName(String name) {
         this.name.set(name);
     }
+
 
     @Override
     public String toString() {

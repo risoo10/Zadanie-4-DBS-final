@@ -4,10 +4,13 @@ import java.sql.Date;
 import java.util.List;
 
 /**
- * Created by Riso on 4/15/2017.
+ * Entity
+ * Holds info about Movie during runtime
+ * Maps entity film in the Entity Model
  */
 public class Movie {
 
+    // Attributes
     private int id;
     private String name;
     private String genre;
@@ -20,8 +23,6 @@ public class Movie {
     private String description;
     private Date premiera;
 
-    private List<PersonInMovie> cast;
-    private List<Screening> screenings;
 
     /**
      *

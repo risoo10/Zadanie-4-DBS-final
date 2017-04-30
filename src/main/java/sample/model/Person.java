@@ -6,10 +6,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- * Created by Riso on 4/19/2017.
+ * Enity osoba from entity model
+ * Holds info about person during runtime
  */
 public class Person {
 
+    // Attributes
     private final IntegerProperty id;
     private final StringProperty firstName;
     private final StringProperty lastName;

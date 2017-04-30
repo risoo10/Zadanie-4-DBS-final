@@ -4,9 +4,12 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- * Created by Riso on 4/19/2017.
+ * Entity obsadenie from Entity Model
+ * Holds info about position during runtime.
  */
 public class Position {
+
+    // Attributes
     private int id;
     private final StringProperty title;
 

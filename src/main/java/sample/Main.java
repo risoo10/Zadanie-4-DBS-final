@@ -19,57 +19,27 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-//        Parent root = FXMLLoader.load(getClass().getResource("gui/main_window.fxml"));
-//        primaryStage.setTitle("DBS 2017 - Filmovy portal");
-//        primaryStage.setScene(new Scene(root));
-//        primaryStage.show();
-//
 
-
+        // Initialize Data Source
         DBConnector dbc = new DBConnector();
-        List<ThumbnailMovie> najnovsieFilmy = dbc.select("SELECT f.id, f.nazov, f.hodnotenie_imdb  FROM film f WHERE f.id = 200001;", new Parser() {
-            @Override
-            public Object parseRow(ResultSet rs) throws SQLException{
-                ThumbnailMovie newMovie = new ThumbnailMovie(
-                        rs.getInt("id"),
-                        rs.getString("nazov"),
-                        rs.getDouble("hodnotenie_imdb"),
-                        "EN"
-                        );
-                return newMovie;
-            }
-        });
-        for (ThumbnailMovie st : najnovsieFilmy){
-            System.out.println(st.getName() +"  ||  " + st.getRating() + " || ");
-        }
 
-        String screeningSelect =
-                "SELECT ovf.id, o.meno, o.priezvisko, ob.nazov FROM osoba_vofilme ovf \n" +
-                "JOIN osoba o ON o.id = ovf.osoba_id \n" +
-                "JOIN obsadenie ob ON ob.id = ovf.obsadenie_id \n" +
-                "WHERE ovf.film_id =";
-
-        List<PersonInMovie> premietania = (List<PersonInMovie>)dbc.select(screeningSelect + najnovsieFilmy.get(0).getId() + ";", new PersonInMovieParser());
-
-        for(PersonInMovie pim : premietania){
-            System.out.println(pim.getFirstName() + "  "+pim.getLastName() + " : " + pim.getPosition() + "("+pim.getMovieName()+")");
-        }
-
-
+        // Load GUI
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("user_pane.fxml"));
         AnchorPane root = (AnchorPane) loader.load();
+
+        // Set and initialize controller
         UserController uc = loader.getController();
+        uc.setDbConnector(dbc);
         uc.setPrimaryStage(primaryStage);
+        uc.init();
+
+        // Show first scene
         primaryStage.setTitle("Filmový portál - Domov");
         Scene scene = new Scene(root);
         uc.setScene(scene);
         primaryStage.setScene(scene);
         primaryStage.show();
-
-
-
-
 
     }
 

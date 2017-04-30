@@ -5,6 +5,10 @@ import sample.model.Movie;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Parse row when selecting movie from DB.
+ * Has multiple usage, so we don't need to implement the Anonymous class with parseRow() method too many times.
+ */
 public class MovieParser implements Parser {
 
     @Override
